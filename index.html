@@ -6,6 +6,7 @@
 <title>Sejal — Creative Portfolio | Graphic Designer</title>
 <meta name="description" content="Graphic Designer with 2+ years of experience in brand identity, social media creatives and campaign design.">
 <meta name="color-scheme" content="light">
+<script>document.documentElement.className="js"</script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light;--bg:#f6e9cf;--ink:#000;--pink:#ea657c}
@@ -65,9 +66,35 @@ p.lead{font-size:1.02rem;max-width:620px;margin-top:20px}
  .tools img{width:64px;height:64px}.tools h3{font-size:1.8rem;width:100%}
 }
 @media(max-width:520px){.i3{grid-template-columns:repeat(2,1fr)}.skills{grid-template-columns:1fr}}
+
+/* ===== animations ===== */
+#bar{position:fixed;top:0;left:0;height:4px;width:100%;background:var(--pink);transform:scaleX(0);transform-origin:0 50%;z-index:60}
+.js .reveal:not(.in){opacity:0}
+.js .reveal.in{animation:up .85s cubic-bezier(.2,.7,.2,1) var(--d,0s) backwards}
+@keyframes up{from{opacity:0;transform:translateY(38px)}to{opacity:1;transform:none}}
+.js .hero .script{animation:write 1.6s cubic-bezier(.6,0,.2,1) .2s backwards}
+@keyframes write{from{clip-path:inset(-30% 100% -30% -5%)}to{clip-path:inset(-30% -5% -30% -5%)}}
+.hero h1 span{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(.9s + var(--i)*.07s)}
+@keyframes rise{from{opacity:0;transform:translateY(70%) rotate(6deg)}to{opacity:1;transform:none}}
+.hero p.lead,.hero-foot{animation:up .9s ease 2s backwards}
+.frame::before{animation:dots 2.4s ease-in-out infinite}
+@keyframes dots{0%,100%{box-shadow:26px 0 var(--ink),52px 0 var(--ink)}50%{box-shadow:30px 0 var(--ink),60px 0 var(--ink)}}
+.frame::after{animation:spin 6s ease-in-out infinite}
+@keyframes spin{0%,70%{transform:rotate(0)}100%{transform:rotate(180deg)}}
+.imgs img,.one img{transition:transform .35s ease,box-shadow .35s ease}
+.imgs img:hover,.one img:hover{transform:translateY(-8px) rotate(-.6deg) scale(1.03);box-shadow:0 18px 34px rgba(0,0,0,.28);position:relative;z-index:2}
+.tools img{transition:transform .3s;animation:float 3.6s ease-in-out infinite}
+.tools img:nth-of-type(2){animation-delay:.3s}.tools img:nth-of-type(3){animation-delay:.6s}.tools img:nth-of-type(4){animation-delay:.9s}.tools img:nth-of-type(5){animation-delay:1.2s}
+.tools img:hover{transform:scale(1.18) rotate(-6deg)}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.title .script.pink,.sm .script{animation:sway 5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg) translateX(6px)}}
+.thanks .script{animation:sway 5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .reveal:not(.in){opacity:1}}
 </style>
 </head>
 <body>
+<div id="bar"></div>
 
 <section class="slide" id="top"><div class="frame hero">
  <div><span class="script">Creative</span><h1>Portfolio</h1></div>
@@ -147,6 +174,20 @@ p.lead{font-size:1.02rem;max-width:620px;margin-top:20px}
 </div></section>
 
 <div id="lb"><img alt=""></div>
+<script>
+(function(){
+var h1=document.querySelector('.hero h1');
+if(h1){var s=h1.textContent;h1.setAttribute('aria-label',s);h1.innerHTML=s.split('').map(function(c,i){return '<span aria-hidden="true" style="--i:'+i+'">'+c+'</span>'}).join('')}
+var sel='.title,.lead,.imgs img,.one img,.skills>div,.tools>*,.about p,.thanks>*,.bring';
+document.querySelectorAll('.frame:not(.hero) '+sel).forEach(function(el){
+ var sib=Array.prototype.indexOf.call(el.parentNode.children,el);el.style.setProperty('--d',(Math.min(sib,8)*0.09)+'s');el.classList.add('reveal')});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+var bar=document.getElementById('bar');
+function sc(){var m=document.documentElement.scrollHeight-innerHeight;bar.style.transform='scaleX('+(m>0?scrollY/m:0)+')'}
+addEventListener('scroll',sc,{passive:true});sc();
+})();
+</script>
 <script>
 var lb=document.getElementById('lb'),li=lb.querySelector('img');
 document.querySelectorAll('.imgs img,.one img').forEach(function(i){i.addEventListener('click',function(){li.src=i.src;lb.classList.add('on')})});
